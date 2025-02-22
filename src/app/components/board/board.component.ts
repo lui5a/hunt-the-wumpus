@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 
 enum BoardElement {
@@ -25,6 +25,7 @@ export class BoardComponent implements OnInit {
   wallQuantity: number = this.boardSize;
   wumpusQuantity: number = 1;
   goldQuantity: number = 1;
+  hunterArrows!: number;
 
   constructor(private gameService: GameService) {}
 
@@ -45,6 +46,8 @@ export class BoardComponent implements OnInit {
     this.board[this.hunterPosition.row][this.hunterPosition.col] =
       BoardElement.Hunter;
 
+    this.hunterArrows = arrowsQuantity;
+
     this.placeElements(wellsQuantity, BoardElement.Well);
     this.placeElements(this.wallQuantity, BoardElement.Wall);
     this.placeElements(this.wumpusQuantity, BoardElement.Wumpus);
@@ -61,11 +64,31 @@ export class BoardComponent implements OnInit {
         }
       }
     }
-    console.log(availableCells);
+
     availableCells = availableCells.sort(() => Math.random() - 0.5);
     for (let i = 0; i < count && i < availableCells.length; i++) {
       const { row, col } = availableCells[i];
       this.board[row][col] = type;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowUp':
+        console.log('ArrowUp');
+        break;
+      case 'ArrowDown':
+        console.log('ArrowDown');
+        break;
+      case 'ArrowLeft':
+        console.log('ArrowLeft');
+        break;
+      case 'ArrowRight':
+        console.log('ArrowRight');
+        break;
+      default:
+        return;
     }
   }
 }
