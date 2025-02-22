@@ -1,1 +1,17 @@
-<p>settings works!</p>
+<form [formGroup]="setUpForm" (ngSubmit)="next()">
+    <div>
+        <label for="cells">Number of Cells: </label>
+        <input id="cells" type="number" formControlName="cells">
+    </div>
+    <div>
+        <label for="wells">Number of Wells: </label>
+        <input id="wells" type="number" formControlName="wells">
+    </div>
+    <div>
+        <label for="arrows">Number of Hunter Arrows: </label>
+        <input id="arrows" type="number" formControlName="arrows">
+    </div>
+    <div>
+        <button [disabled]="setUpForm.invalid">play</button>
+    </div>
+</form>
