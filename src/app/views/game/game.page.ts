@@ -1,12 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BoardComponent } from '../../components/board/board.component';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [],
+  imports: [BoardComponent],
   templateUrl: './game.page.html',
-  styleUrl: './game.page.scss'
+  styleUrl: './game.page.scss',
 })
-export class GamePage {
+export class GamePage implements OnInit {
+  boardSize!: number;
 
+  constructor(private gameService: GameService) {}
+
+  ngOnInit(): void {
+    this.boardSize = this.gameService.getBoardSize();
+  }
 }

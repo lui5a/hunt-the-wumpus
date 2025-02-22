@@ -17,7 +17,11 @@ import { Router } from '@angular/router';
 export class SettingsPage implements OnInit {
   setUpForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private gameService: GameService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -32,6 +36,8 @@ export class SettingsPage implements OnInit {
   }
 
   next() {
+    const { cells, wells, arrows } = this.setUpForm.value;
+    this.gameService.setGameSettings(cells, wells, arrows);
     this.router.navigate(['/game']);
   }
 }
