@@ -26,6 +26,9 @@ export class BoardComponent implements OnInit {
   wumpusQuantity: number = 1;
   goldQuantity: number = 1;
   hunterArrows!: number;
+  gameMessage: string = '';
+  hunterKilled: boolean = false;
+  hunterWithGold: boolean = false;
 
   constructor(private gameService: GameService) {}
 
@@ -74,21 +77,72 @@ export class BoardComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowUp':
-        console.log('ArrowUp');
-        break;
-      case 'ArrowDown':
-        console.log('ArrowDown');
-        break;
-      case 'ArrowLeft':
-        console.log('ArrowLeft');
-        break;
-      case 'ArrowRight':
-        console.log('ArrowRight');
-        break;
-      default:
+    if (this.hunterKilled) {
+      return;
+    } else {
+      this.gameMessage = '';
+      let newRow = this.hunterPosition.row;
+      let newCol = this.hunterPosition.col;
+      switch (event.key) {
+        case 'ArrowUp':
+          if (newRow > 0) newRow--;
+          break;
+        case 'ArrowDown':
+          if (newRow < this.boardSize - 1) newRow++;
+          break;
+        case 'ArrowLeft':
+          if (newCol > 0) newCol--;
+          break;
+        case 'ArrowRight':
+          if (newCol < this.boardSize - 1) newCol++;
+          break;
+        default:
+          return;
+      }
+      const nextCell = this.board[newRow][newCol];
+
+      if (nextCell === BoardElement.Wall) {
+        this.gameMessage = 'wall';
         return;
+      }
+
+      if (nextCell === BoardElement.Wumpus) {
+        this.gameMessage = 'wumpus';
+        this.board[this.hunterPosition.row][this.hunterPosition.col] =
+          BoardElement.Empty;
+        this.hunterPosition = { row: newRow, col: newCol };
+        this.hunterKilled = true;
+        return;
+      }
+
+      if (nextCell === BoardElement.Well) {
+        this.gameMessage = 'well';
+        this.board[this.hunterPosition.row][this.hunterPosition.col] =
+          BoardElement.Empty;
+        this.hunterPosition = { row: newRow, col: newCol };
+        this.hunterKilled = true;
+        return;
+      }
+      if (nextCell === BoardElement.Gold) {
+        this.gameMessage = 'gold';
+        this.board[this.hunterPosition.row][this.hunterPosition.col] =
+          BoardElement.Empty;
+        this.hunterPosition = { row: newRow, col: newCol };
+        this.board[newRow][newCol] = BoardElement.HunterWithGold;
+        this.hunterWithGold = true;
+        return;
+      }
+      this.board[this.hunterPosition.row][this.hunterPosition.col] =
+        BoardElement.Empty;
+      this.hunterPosition = { row: newRow, col: newCol };
+      this.hunterWithGold
+        ? (this.board[newRow][newCol] = BoardElement.HunterWithGold)
+        : (this.board[newRow][newCol] = BoardElement.Hunter);
     }
+  }
+
+  resetBoard() {
+    this.initializeBoard();
+    this.hunterKilled = false;
   }
 }
