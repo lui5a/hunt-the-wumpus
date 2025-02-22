@@ -1,1 +1,12 @@
-<p>{{boardSize}}</p>
+<div class="container d-flex justify-content-center mt-4">
+    <div class="row">
+        <div class="col">
+            <div *ngFor="let row of board; let i = index" class="d-flex">
+                <div class="border d-flex align-items-center justify-content-center bg-light cell"
+                    *ngFor="let cell of row; let j = index">
+                    {{cell}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
