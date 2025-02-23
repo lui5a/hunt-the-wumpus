@@ -1,42 +1,39 @@
-<div class="container d-flex justify-content-center mt-4">
+<div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="row gy-5">
-        <div class="col">
+        <div class="col-6">
 
-            <div class="card">
-                <div class="card-body ">
-                    <h5 class="card-title">Play:</h5>
+            <div class="card h-100">
+                <div class="card-body py-3">
+                    <h5 class="card-title">Game instructions:</h5>
                     <p class="card-text">Use keyboard arrows to move around the board</p>
                     <p class="card-text">Use key "a" to turn left and key "z" to turn right</p>
                     <p class="card-text">Use the space bar to shoot the arrows</p>
-                    <div class="card my-3 py-3">
+                    <div class="card my-4 py-3">
                         <div class="card-body">
                             <p class="card-text">{{gameMessage}}</p>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <button class="btn btn-primary" (click)="resetBoard()">
-                                {{hunterKilled ? 'play again' : ' reset board'}}
-                            </button>
-                        </div>
-                        <div class="col">
-                            <p class="card-text">Arrows: {{hunterArrows}}</p>
-                        </div>
-                    </div>
+
+                </div>
+                <div class="card-footer d-flex justify-content-around align-items-baseline">
+                    <button class="btn btn-primary" (click)="resetBoard()">
+                        {{gameOver ? 'play again' : ' reset board'}}
+                    </button>
+                    <p class="card-text">Remaining Arrows: {{hunterArrows}}</p>
 
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-6">
             <div *ngFor="let row of board; let i = index" class="d-flex">
                 <div *ngFor="let cell of row; let j = index"
                     class="border d-flex align-items-center justify-content-center bg-light cell">
                     <i *ngIf="cell === 6" class="bi bi-geo-fill"></i>
                     <i *ngIf="cell === 1" class="bi bi-geo"></i>
-                    <i *ngIf="cell === 2 && hunterKilled" class="bi bi-trash2-fill"></i>
-                    <i *ngIf="cell === 3 && hunterKilled" class="bi bi-bricks"></i>
-                    <i *ngIf="cell === 4 && hunterKilled" class="bi bi-bug-fill"></i>
-                    <i *ngIf="cell === 5 && hunterKilled" class="bi bi-brightness-alt-high"></i>
+                    <i *ngIf="cell === 2 && gameOver" class="bi bi-trash2-fill"></i>
+                    <i *ngIf="cell === 3 && gameOver" class="bi bi-bricks"></i>
+                    <i *ngIf="cell === 4 && gameOver" class="bi bi-bug-fill"></i>
+                    <i *ngIf="cell === 5 && gameOver" class="bi bi-brightness-alt-high"></i>
                 </div>
             </div>
         </div>

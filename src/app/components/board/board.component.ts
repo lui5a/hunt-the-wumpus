@@ -34,7 +34,7 @@ export class BoardComponent implements OnInit {
   goldQuantity: number = 1;
   hunterArrows!: number;
   gameMessage: string = '';
-  hunterKilled: boolean = false;
+  gameOver: boolean = false;
   hunterWithGold: boolean = false;
   lastDirection: Direction | null = null;
 
@@ -88,7 +88,7 @@ export class BoardComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    if (this.hunterKilled) {
+    if (this.gameOver) {
       return;
     } else {
       if (event.key === ' ') {
@@ -103,7 +103,7 @@ export class BoardComponent implements OnInit {
         this.turnRight();
         return;
       }
-      this.gameMessage = '';
+      // this.gameMessage = '';
       let newRow = this.hunterPosition.row;
       let newCol = this.hunterPosition.col;
       switch (event.key) {
@@ -138,7 +138,7 @@ export class BoardComponent implements OnInit {
         this.board[this.hunterPosition.row][this.hunterPosition.col] =
           BoardElement.Empty;
         this.hunterPosition = { row: newRow, col: newCol };
-        this.hunterKilled = true;
+        this.gameOver = true;
         return;
       }
 
@@ -147,7 +147,7 @@ export class BoardComponent implements OnInit {
         this.board[this.hunterPosition.row][this.hunterPosition.col] =
           BoardElement.Empty;
         this.hunterPosition = { row: newRow, col: newCol };
-        this.hunterKilled = true;
+        this.gameOver = true;
         return;
       }
       if (nextCell === BoardElement.Gold) {
@@ -161,6 +161,10 @@ export class BoardComponent implements OnInit {
         return;
       }
 
+      if (nextCell === BoardElement.Empty) {
+        this.gameMessage = '';
+      }
+
       this.board[this.hunterPosition.row][this.hunterPosition.col] =
         BoardElement.Empty;
 
@@ -171,6 +175,15 @@ export class BoardComponent implements OnInit {
         : (this.board[newRow][newCol] = BoardElement.Hunter);
 
       this.checkPerceptions(newRow, newCol);
+
+      if (
+        this.hunterPosition.row === this.boardSize - 1 &&
+        this.hunterPosition.col === 0 &&
+        this.hunterWithGold
+      ) {
+        this.gameMessage = 'Great, you won!';
+        this.gameOver = true;
+      }
     }
   }
 
@@ -303,6 +316,6 @@ export class BoardComponent implements OnInit {
 
   resetBoard() {
     this.initializeBoard();
-    this.hunterKilled = false;
+    this.gameOver = false;
   }
 }

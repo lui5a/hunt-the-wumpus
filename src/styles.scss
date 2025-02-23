@@ -1,2 +1,24 @@
+$primary: #ff00ff; 
+$light: #ffffff;
+$dark: #111111;
+
 @import "../node_modules/bootstrap/scss/bootstrap";
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+    background-color: $dark;
+    color: $light;
+  }
+  
+  .btn {
+    color: $light;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+
+
+  i {
+    color: $primary; 
+  }
+  

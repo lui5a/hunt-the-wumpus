@@ -5,3 +5,10 @@
     font-weight: bold;
   }
   
+
+  .game-message {
+    max-height: 100px;
+    overflow: auto; 
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+  }

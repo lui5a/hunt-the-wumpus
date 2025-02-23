@@ -1,33 +1,33 @@
-<div class="container d-flex justify-content-center mt-4">
+<div class="container d-flex justify-content-center align-items-center vh-100 ">
     <div class="row">
-        <div class="col-12 text-center my-4">
-            <h1>Settings</h1>
+        <div class="col-12 text-center">
+            <h1>Game Settings</h1>
         </div>
         <div class="col-3"></div>
         <form class="col-6  mt-4" [formGroup]="setUpForm" (ngSubmit)="next()">
-            <div class="row">
+            <div class="row py-2">
                 <label for="cells">Number of Cells: </label>
                 <input class="form-control" id="cells" type="number" formControlName="cells">
             </div>
-            <div class="row">
-                <p *ngIf="setUpForm.get('cells')?.hasError('min') ">Number of cells must be over 5 </p>
-                <p *ngIf="setUpForm.get('cells')?.hasError('max') ">Number of cells must be less than 10 </p>
+            <div class="row py-1">
+                <small *ngIf="setUpForm.get('cells')?.hasError('min') ">Number of cells must be over 5 </small>
+                <small *ngIf="setUpForm.get('cells')?.hasError('max') ">Number of cells must be less than 10 </small>
             </div>
-            <div class="row">
+            <div class="row py-2">
                 <label for="wells">Number of Wells: </label>
                 <input class="form-control" id="wells" type="number" formControlName="wells">
             </div>
-            <div class="row">
-                <p *ngIf="setUpForm.get('wells')?.hasError('min') ">Number of wells must be over 1 </p>
-                <p *ngIf="setUpForm.get('wells')?.hasError('max') ">Number of wells must be less than 5 </p>
+            <div class="row py-1">
+                <small *ngIf="setUpForm.get('wells')?.hasError('min') ">Number of wells must be over 1 </small>
+                <small *ngIf="setUpForm.get('wells')?.hasError('max') ">Number of wells must be less than 5 </small>
             </div>
-            <div class="row">
+            <div class="row py-2">
                 <label for="arrows">Number of Hunter Arrows: </label>
                 <input class="form-control" id="arrows" type="number" formControlName="arrows">
             </div>
-            <div class="row">
-                <p *ngIf="setUpForm.get('arrows')?.hasError('min') ">Number of arrows must be over 1 </p>
-                <p *ngIf="setUpForm.get('arrows')?.hasError('max') ">Number of arrows must be less than 5 </p>
+            <div class="row py-1">
+                <small *ngIf="setUpForm.get('arrows')?.hasError('min') ">Number of arrows must be over 1 </small>
+                <small *ngIf="setUpForm.get('arrows')?.hasError('max') ">Number of arrows must be less than 5 </small>
             </div>
             <div class="row mt-3">
                 <button class="btn btn-primary" [disabled]="setUpForm.invalid">play</button>

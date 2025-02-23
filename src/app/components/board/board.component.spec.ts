@@ -35,15 +35,32 @@ describe('BoardComponent', () => {
     expect(gameServiceMock.getArrows).toHaveBeenCalled();
   });
 
-  it('should initialize the board with the correct size', () => {
+  it('should initialize the board with size', () => {
     expect(component.board.length).toBe(component.boardSize);
     expect(component.board[0].length).toBe(component.boardSize);
   });
 
-  it('should place the hunter in the starting position', () => {
+  it('should place the hunter in starting position', () => {
     expect(component.hunterPosition).toEqual({
       row: component.boardSize - 1,
       col: 0,
     });
+  });
+
+  it('should move the hunter up when ArrowUp pressed', () => {
+    const initialPosition = { ...component.hunterPosition };
+    const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+
+    component.handleKeyDown(event);
+    expect(component.hunterPosition.row).toBe(initialPosition.row - 1);
+  });
+
+  it('should rest arrows when spacebar key pressed', () => {
+    const initialArrows = component.hunterArrows;
+
+    const event = new KeyboardEvent('keydown', { key: ' ' });
+    component.handleKeyDown(event);
+
+    expect(component.hunterArrows).toBe(initialArrows - 1);
   });
 });
