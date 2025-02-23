@@ -30,7 +30,7 @@
         <div class="col">
             <div *ngFor="let row of board; let i = index" class="d-flex">
                 <div *ngFor="let cell of row; let j = index"
-                    class="border d-flex align-items-center justify-content-center bg-light cell">{{cell}}
+                    class="border d-flex align-items-center justify-content-center bg-light cell">
                     <i *ngIf="cell === 6" class="bi bi-geo-fill"></i>
                     <i *ngIf="cell === 1" class="bi bi-geo"></i>
                     <i *ngIf="cell === 4 && hunterKilled" class="bi bi-bug-fill"></i>
