@@ -1,6 +1,10 @@
-<div class="container">
-    <div class="row mt-3">
-        <form class="col-12" [formGroup]="setUpForm" (ngSubmit)="next()">
+<div class="container d-flex justify-content-center mt-4">
+    <div class="row">
+        <div class="col-12 text-center my-4">
+            <h1>Settings</h1>
+        </div>
+        <div class="col-3"></div>
+        <form class="col-6  mt-4" [formGroup]="setUpForm" (ngSubmit)="next()">
             <div class="row">
                 <label for="cells">Number of Cells: </label>
                 <input class="form-control" id="cells" type="number" formControlName="cells">
@@ -29,5 +33,6 @@
                 <button class="btn btn-primary" [disabled]="setUpForm.invalid">play</button>
             </div>
         </form>
+        <div class="col-3"></div>
     </div>
 </div>
