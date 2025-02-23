@@ -1,17 +1,33 @@
-<form [formGroup]="setUpForm" (ngSubmit)="next()">
-    <div>
-        <label for="cells">Number of Cells: </label>
-        <input id="cells" type="number" formControlName="cells">
+<div class="container">
+    <div class="row mt-3">
+        <form class="col-12" [formGroup]="setUpForm" (ngSubmit)="next()">
+            <div class="row">
+                <label for="cells">Number of Cells: </label>
+                <input class="form-control" id="cells" type="number" formControlName="cells">
+            </div>
+            <div class="row">
+                <p *ngIf="setUpForm.get('cells')?.hasError('min') ">Number of cells must be over 5 </p>
+                <p *ngIf="setUpForm.get('cells')?.hasError('max') ">Number of cells must be less than 10 </p>
+            </div>
+            <div class="row">
+                <label for="wells">Number of Wells: </label>
+                <input class="form-control" id="wells" type="number" formControlName="wells">
+            </div>
+            <div class="row">
+                <p *ngIf="setUpForm.get('wells')?.hasError('min') ">Number of wells must be over 1 </p>
+                <p *ngIf="setUpForm.get('wells')?.hasError('max') ">Number of wells must be less than 5 </p>
+            </div>
+            <div class="row">
+                <label for="arrows">Number of Hunter Arrows: </label>
+                <input class="form-control" id="arrows" type="number" formControlName="arrows">
+            </div>
+            <div class="row">
+                <p *ngIf="setUpForm.get('arrows')?.hasError('min') ">Number of arrows must be over 1 </p>
+                <p *ngIf="setUpForm.get('arrows')?.hasError('max') ">Number of arrows must be less than 5 </p>
+            </div>
+            <div class="row mt-3">
+                <button class="btn btn-primary" [disabled]="setUpForm.invalid">play</button>
+            </div>
+        </form>
     </div>
-    <div>
-        <label for="wells">Number of Wells: </label>
-        <input id="wells" type="number" formControlName="wells">
-    </div>
-    <div>
-        <label for="arrows">Number of Hunter Arrows: </label>
-        <input id="arrows" type="number" formControlName="arrows">
-    </div>
-    <div>
-        <button [disabled]="setUpForm.invalid">play</button>
-    </div>
-</form>
+</div>

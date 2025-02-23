@@ -1,17 +1,30 @@
 <div class="container d-flex justify-content-center mt-4">
-    <div class="row">
+    <div class="row gy-5">
+        <div class="col">
+
+            <div class="card">
+                <div class="card-body ">
+                    <h5 class="card-title">Play:</h5>
+                    <p class="card-text">Use keyboard arrows to move around the board</p>
+                    <div class="card my-3 py-3">
+                        <div class="card-body">
+                            <p class="card-text">{{gameMessage}}</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" (click)="resetBoard()">
+                        {{hunterKilled ? 'play again' : ' reset board'}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="col">
             <div *ngFor="let row of board; let i = index" class="d-flex">
-                <div class="border d-flex align-items-center justify-content-center bg-light cell"
-                    *ngFor="let cell of row; let j = index">
+                <div *ngFor="let cell of row; let j = index"
+                    class="border d-flex align-items-center justify-content-center bg-light cell">
                     {{cell}}
                 </div>
             </div>
         </div>
     </div>
 </div>
-<p>{{gameMessage}}</p>
-
-<button class="btn btn-primary" (click)="resetBoard()">
-    {{hunterKilled ? 'play again' : ' reset board'}}
-</button>

@@ -11,6 +11,13 @@ enum BoardElement {
   Gold = 5,
   HunterWithGold = 6,
 }
+
+enum Direction {
+  ArrowUp = 'ArrowUp',
+  ArrowDown = 'ArrowDown',
+  ArrowLeft = 'ArrowLeft',
+  ArrowRight = 'ArrowRight',
+}
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -22,13 +29,14 @@ export class BoardComponent implements OnInit {
   @Input() boardSize!: number;
   board: number[][] = [];
   hunterPosition = { row: 0, col: 0 };
-  wallQuantity: number = this.boardSize;
+  wallQuantity!: number;
   wumpusQuantity: number = 1;
   goldQuantity: number = 1;
   hunterArrows!: number;
   gameMessage: string = '';
   hunterKilled: boolean = false;
   hunterWithGold: boolean = false;
+  lastDirection: Direction | null = null;
 
   constructor(private gameService: GameService) {}
 
@@ -36,8 +44,10 @@ export class BoardComponent implements OnInit {
     this.initializeBoard();
   }
   initializeBoard() {
+    this.gameMessage = '';
     const wellsQuantity = this.gameService.getWells();
     const arrowsQuantity = this.gameService.getArrows();
+    this.wallQuantity = wellsQuantity;
 
     for (let i = 0; i < this.boardSize; i++) {
       this.board[i] = [];
@@ -48,13 +58,13 @@ export class BoardComponent implements OnInit {
     this.hunterPosition = { row: this.boardSize - 1, col: 0 };
     this.board[this.hunterPosition.row][this.hunterPosition.col] =
       BoardElement.Hunter;
-
     this.hunterArrows = arrowsQuantity;
-
     this.placeElements(wellsQuantity, BoardElement.Well);
     this.placeElements(this.wallQuantity, BoardElement.Wall);
     this.placeElements(this.wumpusQuantity, BoardElement.Wumpus);
     this.placeElements(this.goldQuantity, BoardElement.Gold);
+
+    this.checkPerceptions(this.hunterPosition.row, this.hunterPosition.col);
   }
 
   placeElements(count: number, type: number) {
@@ -80,6 +90,9 @@ export class BoardComponent implements OnInit {
     if (this.hunterKilled) {
       return;
     } else {
+      if (event.key === ' ') {
+        this.shootArrow();
+      }
       this.gameMessage = '';
       let newRow = this.hunterPosition.row;
       let newCol = this.hunterPosition.col;
@@ -102,12 +115,12 @@ export class BoardComponent implements OnInit {
       const nextCell = this.board[newRow][newCol];
 
       if (nextCell === BoardElement.Wall) {
-        this.gameMessage = 'wall';
+        this.gameMessage = 'Ouch! You hit a wall';
         return;
       }
 
       if (nextCell === BoardElement.Wumpus) {
-        this.gameMessage = 'wumpus';
+        this.gameMessage = 'R.I.P. The Wumpus got you';
         this.board[this.hunterPosition.row][this.hunterPosition.col] =
           BoardElement.Empty;
         this.hunterPosition = { row: newRow, col: newCol };
@@ -116,7 +129,7 @@ export class BoardComponent implements OnInit {
       }
 
       if (nextCell === BoardElement.Well) {
-        this.gameMessage = 'well';
+        this.gameMessage = 'R.I.P. You just fall on a well';
         this.board[this.hunterPosition.row][this.hunterPosition.col] =
           BoardElement.Empty;
         this.hunterPosition = { row: newRow, col: newCol };
@@ -124,7 +137,8 @@ export class BoardComponent implements OnInit {
         return;
       }
       if (nextCell === BoardElement.Gold) {
-        this.gameMessage = 'gold';
+        this.gameMessage =
+          'Great, you got the gold!!!! Now go back to the starting point';
         this.board[this.hunterPosition.row][this.hunterPosition.col] =
           BoardElement.Empty;
         this.hunterPosition = { row: newRow, col: newCol };
@@ -132,12 +146,111 @@ export class BoardComponent implements OnInit {
         this.hunterWithGold = true;
         return;
       }
+
       this.board[this.hunterPosition.row][this.hunterPosition.col] =
         BoardElement.Empty;
+
       this.hunterPosition = { row: newRow, col: newCol };
+
       this.hunterWithGold
         ? (this.board[newRow][newCol] = BoardElement.HunterWithGold)
         : (this.board[newRow][newCol] = BoardElement.Hunter);
+
+      this.checkPerceptions(newRow, newCol);
+    }
+  }
+
+  getAdjacentCells(row: number, col: number): { row: number; col: number }[] {
+    const directions = [
+      { row: -1, col: 0 },
+      { row: 1, col: 0 },
+      { row: 0, col: -1 },
+      { row: 0, col: 1 },
+    ];
+
+    const adjacentCells = [];
+
+    for (let dir of directions) {
+      const newRow = row + dir.row;
+      const newCol = col + dir.col;
+
+      if (
+        newRow >= 0 &&
+        newRow < this.boardSize &&
+        newCol >= 0 &&
+        newCol < this.boardSize
+      ) {
+        adjacentCells.push({ row: newRow, col: newCol });
+      }
+    }
+
+    return adjacentCells;
+  }
+
+  checkPerceptions(row: number, col: number) {
+    const adjacentCells = this.getAdjacentCells(row, col);
+
+    adjacentCells.forEach((cell) => {
+      if (this.board[cell.row][cell.col] === BoardElement.Wumpus) {
+        this.gameMessage = `Carefull smells like Wumpus, don't be the hunted one`;
+      }
+    });
+
+    adjacentCells.forEach((cell) => {
+      if (this.board[cell.row][cell.col] === BoardElement.Well) {
+        this.gameMessage = `Be Careful is getting windy, don't fall`;
+      }
+    });
+
+    adjacentCells.forEach((cell) => {
+      if (this.board[cell.row][cell.col] === BoardElement.Gold) {
+        this.gameMessage = 'There is something shinning near by';
+      }
+    });
+  }
+
+  shootArrow() {
+    if (this.hunterArrows <= 0) {
+      this.gameMessage = 'Empty';
+      return;
+    } else if (this.lastDirection) {
+      this.hunterArrows--;
+
+      let arrowRow = this.hunterPosition.row;
+      let arrowCol = this.hunterPosition.col;
+
+      const directions = {
+        ArrowUp: { row: -1, col: 0 },
+        ArrowDown: { row: 1, col: 0 },
+        ArrowLeft: { row: 0, col: -1 },
+        ArrowRight: { row: 0, col: 1 },
+      };
+
+      const move = directions[this.lastDirection];
+
+      while (true) {
+        arrowRow += move.row;
+        arrowCol += move.col;
+
+        if (
+          arrowRow < 0 ||
+          arrowRow >= this.boardSize ||
+          arrowCol < 0 ||
+          arrowCol >= this.boardSize
+        ) {
+          this.gameMessage = 'Arrow out';
+          return;
+        }
+
+        if (this.board[arrowRow][arrowCol] === BoardElement.Wall) {
+          this.gameMessage = 'Wall';
+          return;
+        }
+        if (this.board[arrowRow][arrowCol] === BoardElement.Wumpus) {
+          this.gameMessage = 'Wumpus';
+          return;
+        }
+      }
     }
   }
 
