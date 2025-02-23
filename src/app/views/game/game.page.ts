@@ -10,7 +10,7 @@ import { GameService } from '../../services/game.service';
   styleUrl: './game.page.scss',
 })
 export class GamePage implements OnInit {
-  boardSize!: number | null;
+  boardSize!: number;
 
   constructor(private gameService: GameService) {}
 
