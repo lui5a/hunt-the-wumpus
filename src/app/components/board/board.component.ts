@@ -42,6 +42,7 @@ export class BoardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeBoard();
+    this.lastDirection = Direction.ArrowUp;
   }
   initializeBoard() {
     this.gameMessage = '';
@@ -93,21 +94,34 @@ export class BoardComponent implements OnInit {
       if (event.key === ' ') {
         this.shootArrow();
       }
+      if (event.key === 'a' || event.key === 'A') {
+        this.turnLeft();
+        return;
+      }
+
+      if (event.key === 'z' || event.key === 'Z') {
+        this.turnRight();
+        return;
+      }
       this.gameMessage = '';
       let newRow = this.hunterPosition.row;
       let newCol = this.hunterPosition.col;
       switch (event.key) {
         case 'ArrowUp':
           if (newRow > 0) newRow--;
+          this.lastDirection = Direction.ArrowUp;
           break;
         case 'ArrowDown':
           if (newRow < this.boardSize - 1) newRow++;
+          this.lastDirection = Direction.ArrowDown;
           break;
         case 'ArrowLeft':
           if (newCol > 0) newCol--;
+          this.lastDirection = Direction.ArrowLeft;
           break;
         case 'ArrowRight':
           if (newCol < this.boardSize - 1) newCol++;
+          this.lastDirection = Direction.ArrowRight;
           break;
         default:
           return;
@@ -243,15 +257,48 @@ export class BoardComponent implements OnInit {
         }
 
         if (this.board[arrowRow][arrowCol] === BoardElement.Wall) {
-          this.gameMessage = 'Wall';
+          this.gameMessage = 'You hit a wall';
           return;
         }
         if (this.board[arrowRow][arrowCol] === BoardElement.Wumpus) {
-          this.gameMessage = 'Wumpus';
+          this.gameMessage = 'Great! you hit the Wumpus';
+          this.board[arrowRow][arrowCol] = BoardElement.Empty;
           return;
         }
       }
     }
+  }
+
+  turnLeft() {
+    const directions = [
+      Direction.ArrowUp,
+      Direction.ArrowLeft,
+      Direction.ArrowDown,
+      Direction.ArrowRight,
+    ];
+    const currentIndex = directions.indexOf(
+      this.lastDirection ?? Direction.ArrowLeft
+    );
+    this.lastDirection = directions[(currentIndex + 1) % 4];
+    var message = this.lastDirection.replace('Arrow', '');
+
+    this.gameMessage = `You're facing ${message}`;
+  }
+
+  turnRight() {
+    const directions = [
+      Direction.ArrowUp,
+      Direction.ArrowRight,
+      Direction.ArrowDown,
+      Direction.ArrowLeft,
+    ];
+    const currentIndex = directions.indexOf(
+      this.lastDirection ?? Direction.ArrowRight
+    );
+    this.lastDirection = directions[(currentIndex + 1) % 4];
+    var message = this.lastDirection.replace('Arrow', '');
+
+    this.gameMessage = `You're facing ${message}`;
   }
 
   resetBoard() {

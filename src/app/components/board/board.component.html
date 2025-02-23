@@ -6,21 +6,31 @@
                 <div class="card-body ">
                     <h5 class="card-title">Play:</h5>
                     <p class="card-text">Use keyboard arrows to move around the board</p>
+                    <p class="card-text">Use key "a" to turn left and key "z" to turn right</p>
+                    <p class="card-text">Use the space bar to shoot the arrows</p>
                     <div class="card my-3 py-3">
                         <div class="card-body">
                             <p class="card-text">{{gameMessage}}</p>
                         </div>
                     </div>
-                    <button class="btn btn-primary" (click)="resetBoard()">
-                        {{hunterKilled ? 'play again' : ' reset board'}}
-                    </button>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary" (click)="resetBoard()">
+                                {{hunterKilled ? 'play again' : ' reset board'}}
+                            </button>
+                        </div>
+                        <div class="col">
+                            <p class="card-text">Arrows: {{hunterArrows}}</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="col">
             <div *ngFor="let row of board; let i = index" class="d-flex">
                 <div *ngFor="let cell of row; let j = index"
-                    class="border d-flex align-items-center justify-content-center bg-light cell">
+                    class="border d-flex align-items-center justify-content-center bg-light cell">{{cell}}
                     <i *ngIf="cell === 6" class="bi bi-geo-fill"></i>
                     <i *ngIf="cell === 1" class="bi bi-geo"></i>
                     <i *ngIf="cell === 4 && hunterKilled" class="bi bi-bug-fill"></i>
